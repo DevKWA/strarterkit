@@ -6,38 +6,61 @@ import torch.nn as nn
 class MyModel(nn.Module):
     def __init__(self, num_classes: int = 1000, dropout: float = 0.7) -> None:
 
-        super().__init__()
-        self.features = nn.Sequential(
-            nn.Conv2d(3, 64, kernel_size=3, padding=1),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=2, stride=2),
-            nn.Conv2d(64, 128, kernel_size=3, padding=1),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=2, stride=2),
-            nn.Conv2d(128, 256, kernel_size=3, padding=1),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=2, stride=2),
-            nn.Conv2d(256, 512, kernel_size=3, padding=1),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=2, stride=2)
-        )
+        super(MyModel, self).__init__()
 
-        self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
+        # YOUR CODE HERE
+        # Define a CNN architecture. Remember to use the variable num_classes
+        # to size appropriately the output of your classifier, and if you use
+        # the Dropout layer, use the variable "dropout" to indicate how much
+        # to use (like nn.Dropout(p=dropout))
 
-        self.classifier = nn.Sequential(
+        self.model = nn.Sequential(
+            nn.Conv2d(3, 32, 3, padding=1),
+            nn.ReLU(),
+            nn.BatchNorm2d(32),
+            nn.MaxPool2d(2, 2),
+
+            nn.Conv2d(32, 64, 3, padding=1),
+            nn.ReLU(),
+            nn.BatchNorm2d(64),
+            nn.MaxPool2d(2, 2),
+
+            nn.Conv2d(64, 128, 3, padding=1),
+            nn.ReLU(),
+            nn.BatchNorm2d(128),
+            nn.MaxPool2d(2, 2),
+
+            nn.Conv2d(128, 256, 3, padding=1),
+            nn.ReLU(),
+            nn.BatchNorm2d(256),
+            nn.MaxPool2d(2, 2),
+
+            nn.Conv2d(256, 512, 3, padding=1),
+            nn.ReLU(),
+            nn.BatchNorm2d(512),
+            nn.MaxPool2d(2, 2),
+
+
+            nn.Flatten(),
+
+            nn.Linear(512 * 7 * 7, 1024),
+            nn.ReLU(),
+            nn.BatchNorm1d(1024),
             nn.Dropout(p=dropout),
-            nn.Linear(512, 512),
-            nn.ReLU(inplace=True),
+
+            nn.Linear(1024, 512),
+            nn.ReLU(),
             nn.Dropout(p=dropout),
+
             nn.Linear(512, num_classes)
+
         )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        x = self.features(x)
-        x = self.avgpool(x)
-        x = torch.flatten(x, 1)
-        x = self.classifier(x)
-        return x
+        # YOUR CODE HERE: process the input tensor through the
+        # feature extractor, the pooling and the final linear
+        # layers (if appropriate for the architecture chosen)
+        return self.model(x)
 
 
 ######################################################################################

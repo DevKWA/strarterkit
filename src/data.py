@@ -4,6 +4,7 @@ import torch.utils.data
 from pathlib import Path
 from torchvision import datasets, transforms
 import multiprocessing
+import pytest
 
 from .helpers import compute_mean_and_std, get_data_location
 import matplotlib.pyplot as plt
@@ -176,8 +177,8 @@ def visualize_one_batch(data_loaders, max_n: int = 5):
 ######################################################################################
 #                                     TESTS
 ######################################################################################
-import pytest
-
+if __name__ == "__main__":
+    import pytest
 
 @pytest.fixture(scope="session")
 def data_loaders():
